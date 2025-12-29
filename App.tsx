@@ -62,32 +62,35 @@ const generateDemoTasks = (projectId: string, startOffset: number): Task[] => {
     labels: ['Planning'],
     assignee: 'David Kim',
     startDate: dateStr(startOffset),
-    dueDate: dateStr(startOffset + 10),
-    effort: 40,
+    dueDate: dateStr(startOffset + 20),
+    effort: 80,
     allocation: 100
   });
 
-  // Generate 15+ subtasks and standard tasks
-  for (let i = 1; i <= 16; i++) {
-    const isSubtask = i > 5 && i < 12;
-    const taskStatus = i < 4 ? Status.COMPLETED : i < 8 ? Status.IN_PROGRESS : Status.NOT_STARTED;
-    const duration = 3 + (i % 5);
-    const start = startOffset + (i * 2);
+  // Generate 20 tasks to ensure density and coverage
+  for (let i = 1; i <= 20; i++) {
+    const isSubtask = i > 4 && i < 15;
+    const taskStatus = i < 5 ? Status.COMPLETED : i < 12 ? Status.IN_PROGRESS : Status.NOT_STARTED;
+
+    // Cluster tasks around the current date (dateStr(0))
+    // we use (i * 3) - 15 to spread them out around -15 to +45 relative to startOffset
+    const start = startOffset + (i * 3) - 15;
+    const duration = 5 + (i % 7);
 
     tasks.push({
       id: `${projectId}_t${i}`,
       parentId: isSubtask ? parentId : undefined,
       title: `${disciplines[i % disciplines.length]} - Step ${i}`,
       description: `Detailed execution of ${disciplines[i % disciplines.length].toLowerCase()} for the demo project.`,
-      bucketId: i < 5 ? 'b3' : i < 10 ? 'b2' : 'b1',
-      priority: i % 4 === 0 ? Priority.URGENT : i % 3 === 0 ? Priority.HIGH : Priority.MEDIUM,
+      bucketId: i < 6 ? 'b3' : i < 14 ? 'b2' : 'b1',
+      priority: i % 5 === 0 ? Priority.URGENT : i % 3 === 0 ? Priority.HIGH : Priority.MEDIUM,
       status: taskStatus,
       labels: [disciplines[i % disciplines.length].split(' ')[0]],
       assignee: assignees[i % assignees.length],
       startDate: dateStr(start),
       dueDate: dateStr(start + duration),
       effort: duration * 8,
-      allocation: 100,
+      allocation: 80 + (i % 3) * 10,
       predecessors: i > 1 ? [`${projectId}_t${i - 1}`] : []
     });
   }

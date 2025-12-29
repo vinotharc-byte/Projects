@@ -212,8 +212,8 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
       case 'priority':
         return (
           <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider ${task.priority === Priority.URGENT ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/50' :
-              task.priority === Priority.HIGH ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50' :
-                task.priority === Priority.MEDIUM ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/50' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/5'
+            task.priority === Priority.HIGH ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50' :
+              task.priority === Priority.MEDIUM ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/50' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/5'
             }`}>
             {task.priority}
           </span>
@@ -337,10 +337,10 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
               {weeklyColumnTotals.map((totals, i) => (
                 <td key={`total-day-${i}`} className="p-2 border-r border-gray-200 dark:border-white/10 text-center align-middle">
                   <div className="flex flex-col items-center justify-center gap-1">
-                    <div className={`text-[10px] font-semibold ${totals.est > 0 ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300 dark:text-gray-600'}`}>
+                    <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded bg-planner-100 dark:bg-planner-900/40 ${totals.est > 0 ? 'text-planner-700 dark:text-planner-300' : 'text-transparent select-none'}`}>
                       {totals.est > 0 ? `${totals.est}h` : '-'}
                     </div>
-                    <div className={`text-sm font-bold ${totals.act > totals.est && totals.est > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'}`}>
+                    <div className={`text-sm font-black ${totals.act > totals.est && totals.est > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-gray-100'}`}>
                       {totals.act > 0 ? `${totals.act}h` : '0'}
                     </div>
                   </div>
@@ -392,7 +392,7 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
                         <div className="flex flex-col items-center justify-center gap-1.5 py-1">
                           {/* Top: Estimated */}
                           <div
-                            className={`text-[10px] leading-none font-medium ${estHours > 0 ? 'text-gray-400 dark:text-gray-500' : 'text-transparent select-none'}`}
+                            className={`text-[11px] leading-none font-black px-1.5 py-1 rounded bg-planner-50 dark:bg-planner-900/30 border border-planner-100 dark:border-planner-800/50 ${estHours > 0 ? 'text-planner-700 dark:text-planner-300 shadow-sm' : 'text-transparent select-none'}`}
                             title={estHours > 0 ? `Planned: ${estHours}h` : ''}
                           >
                             {estHours > 0 ? `${estHours}h` : '-'}
@@ -422,10 +422,10 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
                   {/* Weekly Row Total Column */}
                   <td className="px-1 py-3 text-center align-middle bg-gray-50 dark:bg-[#1a1a1a] border-l border-gray-200 dark:border-white/10">
                     <div className="flex flex-col items-center justify-center gap-1">
-                      <div className={`text-[10px] leading-none font-medium ${weeklyTaskEst > 0 ? 'text-gray-400 dark:text-gray-500' : 'text-transparent'}`}>
+                      <div className={`text-[11px] leading-none font-black px-1.5 py-0.5 rounded bg-planner-100 dark:bg-planner-900/40 ${weeklyTaskEst > 0 ? 'text-planner-700 dark:text-planner-300' : 'text-transparent'}`}>
                         {weeklyTaskEst > 0 ? `${weeklyTaskEst.toFixed(1)}h` : '-'}
                       </div>
-                      <div className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                      <div className="text-sm font-black text-gray-800 dark:text-gray-200">
                         {weeklyTaskAct > 0 ? `${weeklyTaskAct.toFixed(1)}h` : '0'}
                       </div>
                     </div>
