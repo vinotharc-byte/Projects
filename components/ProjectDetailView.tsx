@@ -867,7 +867,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, p
                         }
                         return true;
                      }).map(post => (
-                        <div key={post.id} className={`group flex gap-4 ${post.isActionItem ? (post.actionStatus === 'Solved' ? 'mx-0 bg-emerald-50/50 dark:bg-emerald-900/5 -mx-4 p-4 rounded-xl border border-emerald-100/50 dark:border-emerald-500/10' : 'mx-0 bg-amber-50/30 dark:bg-amber-900/10 -mx-4 p-4 rounded-xl border border-amber-100/50 dark:border-amber-500/10') : ''}`}>
+                        <div key={post.id} className={`group flex gap-4 ${post.isActionItem ? (post.actionStatus === 'Solved' ? 'mx-0 bg-emerald-50 dark:bg-emerald-900/5 -mx-4 p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/10' : 'mx-0 bg-amber-100/50 dark:bg-amber-900/20 -mx-4 p-4 rounded-xl border border-amber-400/30 dark:border-amber-500/30') : ''}`}>
                            <div className="flex-shrink-0">
                               <Avatar name={post.author} className="w-10 h-10 shadow-sm" />
                            </div>
@@ -878,7 +878,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, p
                                     <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{post.author}</span>
                                     <span className="text-xs text-gray-400">{new Date(post.timestamp).toLocaleString()}</span>
                                     {post.isActionItem && (
-                                       <span className="ml-2 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider rounded-full">
+                                       <span className="ml-2 px-2.5 py-0.5 bg-amber-200 dark:bg-amber-900/60 text-amber-950 dark:text-amber-300 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm ring-1 ring-amber-500/30">
                                           Action Item
                                        </span>
                                     )}
