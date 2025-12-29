@@ -1,0 +1,5 @@
+{
+  "name": "Planner Pro Prototype",
+  "description": "A Microsoft Planner-inspired project management tool designed as a concept prototype for PowerApps development, featuring Kanban boards, charts, and AI-assisted task generation.",
+  "requestFramePermissions": []
+}
