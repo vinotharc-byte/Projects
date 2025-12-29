@@ -28,110 +28,183 @@ const dateStr = (days: number) => {
 
 // -- Sample Data: People --
 const INITIAL_PEOPLE: Person[] = [
-  { id: 'p1', name: 'Robert Chen', role: 'Lead Architect', team: 'Engineering', manager: 'Sarah Johnson', joinDate: '2022-03-15', email: 'robert@company.com', status: 'Active' },
-  { id: 'p2', name: 'Sarah Johnson', role: 'Engineering Director', team: 'Management', manager: 'CTO', joinDate: '2020-01-10', email: 'sarah@company.com', status: 'Active' },
-  { id: 'p3', name: 'Emily White', role: 'Sr. Backend Dev', team: 'Engineering', manager: 'Sarah Johnson', joinDate: '2021-06-20', email: 'emily@company.com', status: 'Active' },
-  { id: 'p4', name: 'Maria Rodriguez', role: 'Frontend Lead', team: 'Product', manager: 'David Kim', joinDate: '2022-11-01', email: 'maria@company.com', status: 'Active' },
-  { id: 'p5', name: 'David Kim', role: 'Head of Product', team: 'Management', manager: 'CEO', joinDate: '2019-05-15', email: 'david@company.com', status: 'Active' },
+  { id: 'p1', name: 'Robert Chen', role: 'Lead Mechanical Engineer', team: 'Mechanical', manager: 'Sarah Johnson', joinDate: '2022-03-15', email: 'robert@projects.com', status: 'Active' },
+  { id: 'p2', name: 'Sarah Johnson', role: 'Operations Director', team: 'Management', manager: 'CEO', joinDate: '2020-01-10', email: 'sarah@projects.com', status: 'Active' },
+  { id: 'p3', name: 'Emily White', role: 'HVAC Specialist', team: 'Mechanical', manager: 'Sarah Johnson', joinDate: '2021-06-20', email: 'emily@projects.com', status: 'Active' },
+  { id: 'p4', name: 'Maria Rodriguez', role: 'Design Engineer', team: 'Design', manager: 'David Kim', joinDate: '2022-11-01', email: 'maria@projects.com', status: 'Active' },
+  { id: 'p5', name: 'David Kim', role: 'Project Manager', team: 'Management', manager: 'Sarah Johnson', joinDate: '2019-05-15', email: 'david@projects.com', status: 'Active' },
+  { id: 'p6', name: 'James Wilson', role: 'Site Supervisor', team: 'Field Ops', manager: 'David Kim', joinDate: '2023-01-10', email: 'james@projects.com', status: 'Active' },
+  { id: 'p7', name: 'Lisa Zhang', role: 'CAD Technician', team: 'Design', manager: 'Maria Rodriguez', joinDate: '2023-05-20', email: 'lisa@projects.com', status: 'Active' },
 ];
 
 const INITIAL_TEAMS = [
-  { id: 't1', name: 'Engineering' },
-  { id: 't2', name: 'Product' },
-  { id: 't3', name: 'Design' },
+  { id: 't1', name: 'Mechanical' },
+  { id: 't2', name: 'Design' },
+  { id: 't3', name: 'Field Ops' },
   { id: 't4', name: 'Management' }
 ];
 
-// -- Sample Data: Tasks for Robert Chen (RC) --
-const RC_TASKS: Partial<Task>[] = [
-  { id: 'rc1', title: 'System Architecture Review', description: 'Deep dive into the core engine.', bucketId: 'b2', priority: Priority.HIGH, status: Status.IN_PROGRESS, labels: ['Arch'], assignee: 'Robert Chen', startDate: dateStr(-1), dueDate: dateStr(4), effort: 24, allocation: 100 },
-  { id: 'rc2', title: 'API Security Audit', description: 'Reviewing auth flow.', bucketId: 'b2', priority: Priority.URGENT, status: Status.IN_PROGRESS, labels: ['Security'], assignee: 'Robert Chen', startDate: dateStr(0), dueDate: dateStr(2), effort: 12, allocation: 100 },
-  { id: 'rc3', title: 'Onboarding Workshop', description: 'Training new hires.', bucketId: 'b1', priority: Priority.MEDIUM, status: Status.COMPLETED, labels: ['HR'], assignee: 'Robert Chen', startDate: dateStr(-10), dueDate: dateStr(-8), effort: 16, allocation: 100 },
-  { id: 'rc4', title: 'Performance Profiling', description: 'SQL query optimization.', bucketId: 'b2', priority: Priority.MEDIUM, status: Status.IN_PROGRESS, labels: ['DevOps'], assignee: 'Robert Chen', startDate: dateStr(3), dueDate: dateStr(60), effort: 160, allocation: 100 },
-  // Overlapping tasks for over-allocation demo (Dec 23-25 handled by dateStr logic)
-  { id: 'rc5', title: 'Critical Bug Fix: Memory Leak', description: '', bucketId: 'b2', priority: Priority.URGENT, status: Status.IN_PROGRESS, labels: [], assignee: 'Robert Chen', startDate: dateStr(-1), dueDate: dateStr(1), effort: 16, allocation: 50 },
-  { id: 'rc6', title: 'Team Sync & Mentoring', description: '', bucketId: 'b2', priority: Priority.MEDIUM, status: Status.IN_PROGRESS, labels: [], assignee: 'Robert Chen', startDate: dateStr(-1), dueDate: dateStr(1), effort: 4, allocation: 25 },
-  // Future tasks to test timeline extension
-  { id: 'rc_future', title: 'FY2026 Strategy Planning', description: '', bucketId: 'b1', priority: Priority.MEDIUM, status: Status.NOT_STARTED, labels: [], assignee: 'Robert Chen', startDate: dateStr(70), dueDate: dateStr(90), effort: 40, allocation: 50 }
-];
+// -- Helper for Task Generation --
+const generateDemoTasks = (projectId: string, startOffset: number): Task[] => {
+  const tasks: Task[] = [];
+  const disciplines = ['Design Review', 'Procurement', 'Structural Work', 'Electrical Integration', 'Testing', 'Final Handover'];
+  const assignees = ['Robert Chen', 'Emily White', 'Maria Rodriguez', 'James Wilson', 'Lisa Zhang'];
 
-// Project 1: Next-Gen EV Battery Pack (Big Project)
-// Added Hierarchy: t1_parent is parent of t1_1 and t1_2
-const TASKS_P1: Task[] = [
-  ...RC_TASKS.slice(1, 3) as Task[], // Inject Robert's tasks
+  // Create a parent task for the whole phase
+  const parentId = `${projectId}_parent`;
+  tasks.push({
+    id: parentId,
+    title: 'Phase 1: Mobilization & Planning',
+    description: 'Initial site setup and resource planning.',
+    bucketId: 'b1',
+    priority: Priority.HIGH,
+    status: Status.IN_PROGRESS,
+    labels: ['Planning'],
+    assignee: 'David Kim',
+    startDate: dateStr(startOffset),
+    dueDate: dateStr(startOffset + 10),
+    effort: 40,
+    allocation: 100
+  });
 
-  // Parent Task
-  { id: 't1_parent', title: 'Phase 1: Thermal & Mechanical', description: 'Core structural analysis phase.', bucketId: 'b2', priority: Priority.HIGH, status: Status.IN_PROGRESS, labels: ['Management'], assignee: 'Robert Chen', startDate: dateStr(-30), dueDate: dateStr(15), effort: 0, allocation: 0, isMilestone: false },
+  // Generate 15+ subtasks and standard tasks
+  for (let i = 1; i <= 16; i++) {
+    const isSubtask = i > 5 && i < 12;
+    const taskStatus = i < 4 ? Status.COMPLETED : i < 8 ? Status.IN_PROGRESS : Status.NOT_STARTED;
+    const duration = 3 + (i % 5);
+    const start = startOffset + (i * 2);
 
-  // Children of t1_parent
-  { id: 't1_1', parentId: 't1_parent', title: 'Thermal Analysis (CFD)', description: 'Simulate cooling flow.', bucketId: 'b2', priority: Priority.HIGH, status: Status.COMPLETED, labels: ['Analysis'], assignee: 'Emily White', startDate: dateStr(-30), dueDate: dateStr(-10), effort: 80, allocation: 100 },
-  { id: 't1_2', parentId: 't1_parent', title: 'Cell Holder CAD Design', description: 'Injection molded spacers.', bucketId: 'b2', priority: Priority.URGENT, status: Status.IN_PROGRESS, labels: ['Design'], assignee: 'Maria Rodriguez', startDate: dateStr(-15), dueDate: dateStr(15), effort: 120, allocation: 100, predecessors: ['t1_1'] },
-
-  { id: 't1_3', title: 'BMS Logic Implementation', description: 'Safety code for voltage monitoring.', bucketId: 'b2', priority: Priority.HIGH, status: Status.IN_PROGRESS, labels: ['Software'], assignee: 'Robert Chen', startDate: dateStr(2), dueDate: dateStr(20), effort: 120, allocation: 100 },
-  { id: 't1_4', title: 'Safety Certification Stage 1', description: 'Regulatory documentation.', bucketId: 'b1', priority: Priority.MEDIUM, status: Status.NOT_STARTED, labels: ['Regulatory'], assignee: 'David Kim', startDate: dateStr(25), dueDate: dateStr(35), effort: 40, allocation: 100, predecessors: ['t1_3'] },
-  { id: 't1_m1', title: 'Core Design Freeze', description: 'Major milestone.', bucketId: 'b2', priority: Priority.URGENT, status: Status.NOT_STARTED, labels: ['Milestone'], assignee: 'Sarah Johnson', startDate: dateStr(0), dueDate: dateStr(0), effort: 0, allocation: 0, isMilestone: true, predecessors: ['t1_2'] },
-];
-
-const TASKS_P2: Task[] = [
-  ...RC_TASKS.slice(0, 1) as Task[],
-  { id: 't2_1', title: 'Supply Chain Risk Analysis', description: '', bucketId: 'b2', priority: Priority.MEDIUM, status: Status.IN_PROGRESS, labels: [], assignee: 'David Kim', startDate: dateStr(1), dueDate: dateStr(10), effort: 40, allocation: 100 },
-  { id: 't2_2', title: 'Vendor Negotiations', description: '', bucketId: 'b1', priority: Priority.HIGH, status: Status.NOT_STARTED, labels: [], assignee: 'Sarah Johnson', startDate: dateStr(12), dueDate: dateStr(20), effort: 32, allocation: 100 },
-];
+    tasks.push({
+      id: `${projectId}_t${i}`,
+      parentId: isSubtask ? parentId : undefined,
+      title: `${disciplines[i % disciplines.length]} - Step ${i}`,
+      description: `Detailed execution of ${disciplines[i % disciplines.length].toLowerCase()} for the demo project.`,
+      bucketId: i < 5 ? 'b3' : i < 10 ? 'b2' : 'b1',
+      priority: i % 4 === 0 ? Priority.URGENT : i % 3 === 0 ? Priority.HIGH : Priority.MEDIUM,
+      status: taskStatus,
+      labels: [disciplines[i % disciplines.length].split(' ')[0]],
+      assignee: assignees[i % assignees.length],
+      startDate: dateStr(start),
+      dueDate: dateStr(start + duration),
+      effort: duration * 8,
+      allocation: 100,
+      predecessors: i > 1 ? [`${projectId}_t${i - 1}`] : []
+    });
+  }
+  return tasks;
+};
 
 const INITIAL_PROJECTS: Project[] = [
   {
-    id: 'p_ev',
-    name: 'Next-Gen EV Battery Pack',
-    manager: 'Robert Chen',
+    id: 'p1',
+    name: 'Industrial Boiler Installation',
+    manager: 'David Kim',
     status: 'Active',
-    startDate: dateStr(-30),
-    dueDate: dateStr(60),
-    description: 'Developing high-density solid state battery modules for flagship SUV.',
-    buckets: [
-      { id: 'b1', name: 'Backlog' },
-      { id: 'b2', name: 'Active Sprint' },
-      { id: 'b3', name: 'Verified' }
-    ],
-    tasks: TASKS_P1,
-    risks: [
-      { id: 'r1', description: 'Thermal runaway risk during fast charging', probability: 'Medium', impact: 'High', owner: 'Robert Chen', status: 'Mitigated', mitigationAction: 'Implementing triple-redundant safety cutoffs' },
-      { id: 'r2', description: 'Supply chain delay for solid-state electrolyte', probability: 'High', impact: 'High', owner: 'Sarah Johnson', status: 'Open', mitigationAction: 'Qualifying second-source vendor in Europe' }
-    ],
-    scopeChanges: [
-      { id: 'sc1', date: dateStr(-15), title: 'Form Factor Revision', description: 'Internal height decreased by 5mm.', impact: 'Requires redesign of cell holders' }
-    ],
-    discussions: [
-      {
-        id: 'd1',
-        author: 'Robert Chen',
-        timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-        text: 'We need to confirm the safety certification requirements for the EU market before @Sarah_Johnson signs the vendor contract.',
-        isActionItem: true,
-        actionStatus: 'Open',
-        responsibility: 'Sarah Johnson',
-        targetDate: dateStr(15)
-      },
-      {
-        id: 'd2',
-        author: 'Emily White',
-        timestamp: new Date(Date.now() - 3600000 * 24).toISOString(),
-        text: 'Initial thermal tests look promising. Peak temperature was within 2 degrees of theoretical model.',
-        isActionItem: false
-      }
-    ]
+    startDate: dateStr(-10),
+    dueDate: dateStr(40),
+    description: 'Replacing aging boiler units at Downtown Medical Center.',
+    buckets: [{ id: 'b1', name: 'Backlog' }, { id: 'b2', name: 'In Progress' }, { id: 'b3', name: 'Done' }],
+    tasks: generateDemoTasks('p1', -10)
   },
   {
-    id: 'p_hvac',
-    name: 'Downtown Medical Center - HVAC Retrofit',
-    manager: 'Emily White',
-    status: 'Planning',
-    startDate: dateStr(5),
-    dueDate: dateStr(120),
-    buckets: [{ id: 'b1', name: 'Planning' }, { id: 'b2', name: 'Construction' }],
-    tasks: TASKS_P2
+    id: 'p2',
+    name: 'HVAC Retrofit - Tech Park',
+    manager: 'Sarah Johnson',
+    status: 'Active',
+    startDate: dateStr(0),
+    dueDate: dateStr(60),
+    description: 'High-efficiency HVAC upgrade for building phase 2.',
+    buckets: [{ id: 'b1', name: 'Backlog' }, { id: 'b2', name: 'In Progress' }, { id: 'b3', name: 'Done' }],
+    tasks: generateDemoTasks('p2', 0)
   },
-  { id: 'p3', name: 'FY2026 Budget Planning', manager: 'David Kim', status: 'On Hold', startDate: dateStr(20), dueDate: dateStr(45), buckets: [{ id: 'b1', name: 'To Do' }], tasks: [] },
-  { id: 'p4', name: 'Infrastructure Migration', manager: 'Maria Rodriguez', status: 'Active', startDate: dateStr(-10), dueDate: dateStr(90), buckets: [{ id: 'b1', name: 'To Do' }], tasks: [] },
+  {
+    id: 'p3',
+    name: 'Hydraulic Press Maintenance',
+    manager: 'Robert Chen',
+    status: 'Planning',
+    startDate: dateStr(15),
+    dueDate: dateStr(45),
+    description: 'Annual deep maintenance and part replacement for the factory floor.',
+    buckets: [{ id: 'b1', name: 'Planning' }, { id: 'b2', name: 'Active' }, { id: 'b3', name: 'Verified' }],
+    tasks: generateDemoTasks('p3', 15)
+  },
+  {
+    id: 'p4',
+    name: 'Ventilation Design - SubCity',
+    manager: 'Maria Rodriguez',
+    status: 'Active',
+    startDate: dateStr(-5),
+    dueDate: dateStr(70),
+    description: 'Underground tunnel ventilation system modeling and design.',
+    buckets: [{ id: 'b1', name: 'Design' }, { id: 'b2', name: 'Review' }, { id: 'b3', name: 'Approval' }],
+    tasks: generateDemoTasks('p4', -5)
+  },
+  {
+    id: 'p5',
+    name: 'Cooling Tower Overhaul',
+    manager: 'David Kim',
+    status: 'On Hold',
+    startDate: dateStr(30),
+    dueDate: dateStr(90),
+    description: 'Critical cooling infrastructure upgrade for Global Data Center.',
+    buckets: [{ id: 'b1', name: 'Backlog' }, { id: 'b2', name: 'Executing' }, { id: 'b3', name: 'Done' }],
+    tasks: generateDemoTasks('p5', 30)
+  },
+  {
+    id: 'p6',
+    name: 'Precision Gearbox Assembly',
+    manager: 'Lisa Zhang',
+    status: 'Planning',
+    startDate: dateStr(10),
+    dueDate: dateStr(50),
+    description: 'Manufacturing of custom high-torque gearboxes for robotics.',
+    buckets: [{ id: 'b1', name: 'Queued' }, { id: 'b2', name: 'Assembly' }, { id: 'b3', name: 'QA' }],
+    tasks: generateDemoTasks('p6', 10)
+  },
+  {
+    id: 'p7',
+    name: 'Commercial Ducting Layout',
+    manager: 'James Wilson',
+    status: 'Active',
+    startDate: dateStr(5),
+    dueDate: dateStr(45),
+    description: 'Ductwork fabrication and installation for new commercial tower.',
+    buckets: [{ id: 'b1', name: 'Todo' }, { id: 'b2', name: 'In Flow' }, { id: 'b3', name: 'Finished' }],
+    tasks: generateDemoTasks('p7', 5)
+  },
+  {
+    id: 'p8',
+    name: 'Chiller Plant Optimization',
+    manager: 'Emily White',
+    status: 'Active',
+    startDate: dateStr(-20),
+    dueDate: dateStr(30),
+    description: 'Software and mechanical tuning of the central chiller plant.',
+    buckets: [{ id: 'b1', name: 'Analyzing' }, { id: 'b2', name: 'Tuning' }, { id: 'b3', name: 'Optimized' }],
+    tasks: generateDemoTasks('p8', -20)
+  },
+  {
+    id: 'p9',
+    name: 'Factory Robotics Calibration',
+    manager: 'Robert Chen',
+    status: 'Active',
+    startDate: dateStr(2),
+    dueDate: dateStr(35),
+    description: 'Fine-tuning mechanical arms for 0.1mm precision.',
+    buckets: [{ id: 'b1', name: 'Setup' }, { id: 'b2', name: 'Calibrating' }, { id: 'b3', name: 'Validated' }],
+    tasks: generateDemoTasks('p9', 2)
+  },
+  {
+    id: 'p10',
+    name: 'Solar Thermal Integration',
+    manager: 'Maria Rodriguez',
+    status: 'Planning',
+    startDate: dateStr(40),
+    dueDate: dateStr(100),
+    description: 'Integrating solar heating into existing university dorms.',
+    buckets: [{ id: 'b1', name: 'Planning' }, { id: 'b2', name: 'Piping' }, { id: 'b3', name: 'Online' }],
+    tasks: generateDemoTasks('p10', 40)
+  }
 ];
 
 // -- Helpers: Business Days --
