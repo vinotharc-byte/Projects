@@ -89,7 +89,7 @@ const generateDemoTasks = (projectId: string, startOffset: number): Task[] => {
       assignee: assignees[i % assignees.length],
       startDate: dateStr(start),
       dueDate: dateStr(start + duration),
-      effort: duration * 8,
+      effort: duration * (6 + (i % 5)), // Target 6h-10h per day
       allocation: 80 + (i % 3) * 10,
       predecessors: i > 1 ? [`${projectId}_t${i - 1}`] : []
     });

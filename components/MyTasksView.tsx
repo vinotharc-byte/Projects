@@ -337,11 +337,11 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
               {weeklyColumnTotals.map((totals, i) => (
                 <td key={`total-day-${i}`} className="p-2 border-r border-gray-200 dark:border-white/10 text-center align-middle">
                   <div className="flex flex-col items-center justify-center gap-1">
-                    <div className={`text-[12px] font-black ${totals.est > 0 ? 'text-gray-900 dark:text-white' : 'text-transparent select-none'}`}>
-                      {totals.est > 0 ? `${totals.est}h` : '-'}
+                    <div className={`text-[12px] font-black ${totals.est > 8 ? 'text-red-600 dark:text-red-400' : (totals.est > 0 ? 'text-gray-900 dark:text-white' : 'text-transparent select-none')}`}>
+                      {totals.est > 0 ? `${totals.est.toFixed(1)}h` : '-'}
                     </div>
-                    <div className={`text-[13px] font-black ${totals.act > totals.est && totals.est > 0 ? 'text-red-600 dark:text-red-400' : 'text-planner-600 dark:text-planner-400'}`}>
-                      {totals.act > 0 ? `${totals.act}h` : '0'}
+                    <div className={`text-[13px] font-black ${totals.act > 8 ? 'text-red-600 dark:text-red-400' : (totals.act > totals.est && totals.est > 0 ? 'text-red-500/80 dark:text-red-400/80' : 'text-planner-600 dark:text-planner-400')}`}>
+                      {totals.act > 0 ? `${totals.act.toFixed(1)}h` : '0'}
                     </div>
                   </div>
                 </td>
@@ -392,7 +392,7 @@ export const MyTasksView: React.FC<MyTasksViewProps> = ({ projects, currentUser,
                         <div className="flex flex-col items-center justify-center gap-1.5 py-1">
                           {/* Top: Estimated */}
                           <div
-                            className={`text-[12px] leading-none font-black ${estHours > 0 ? 'text-gray-900 dark:text-white' : 'text-transparent select-none'}`}
+                            className={`text-[12px] leading-none font-black ${estHours > 8 ? 'text-red-500' : (estHours > 0 ? 'text-gray-900 dark:text-white' : 'text-transparent select-none')}`}
                             title={estHours > 0 ? `Planned: ${estHours}h` : ''}
                           >
                             {estHours > 0 ? `${estHours}h` : '-'}
